@@ -1,0 +1,103 @@
+---
+title: "Coffee Flex Dashboard"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    vertical_layout: fill
+    horizontal_layout: fill
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library("googlesheets")
+library("openssl")
+library("curl")
+library("openssl")
+library("httr")
+library(lubridate)
+library(dplyr)
+library(ggplot2)
+library(rsconnect)
+library(ggmap)
+library(DT)
+
+#Get & clean data #### 
+#Via googlesheets:
+mydata <- gs_title('Coffee Tally v2')
+mydata <- gs_read(mydata, col_names = TRUE)
+mydata$date <- as.Date(mydata$date, "%m/%d/%Y")
+mydata$day.name <- weekdays(mydata$date)
+mydata$is.weekday <- 1
+mydata$is.weekday[mydata$day.name %in% c("zaterdag", "zondag")] <- 0
+
+#number of coffees, number of days and avg.intake
+coffee <- nrow(mydata)
+days <- length(unique(mydata$date))
+avg.intake <- round(coffee/days, digits = 2)
+
+# aantal koffie en gemiddelde per werkdag -> subsetten naar alleen regels met werkdagen, dan dezelfde 
+mydata.work <- subset(mydata, is.weekday == 1)
+coffee.work <- nrow(mydata.work)
+days.work <- length(unique(mydata.work$date))
+avg.intake.work <- round(coffee.work/days.work, digits = 2)
+
+```
+
+Row 
+-----------------------------------------------------------------------
+
+### Cups of Coffee
+
+```{r}
+valueBox(coffee, icon = "fa-coffee")
+
+```
+
+### Days Logged
+
+```{r}
+valueBox(days, icon = "fa-calendar")
+
+```
+
+### Average number of cups
+
+```{r}
+valueBox(avg.intake, icon = "fa-home")
+
+```
+
+### Average number of cups on working days
+
+```{r}
+valueBox(avg.intake.work, icon = 'fa-building')
+
+```
+
+
+Row {.tabset .tabset-fade}
+-----------------------------------------------------------------------
+
+### Barchart Date
+
+```{r, fig.width=15, fig.height=7}
+plot1 <- ggplot(mydata, aes(date)) +
+  geom_bar(fill = "dodgerblue") +
+  theme_bw() +
+  theme( axis.title.y  = element_blank(), text = element_text(size=8))
+
+print(plot1)
+```
+
+### Histogram Time
+
+```{r, fig.width=15, fig.height=7}
+plot2 <- ggplot(mydata, aes(time)) +
+  geom_histogram(bins = 25, fill = "dodgerblue") +
+  theme_bw() +
+  theme( axis.title.y  = element_blank(), text = element_text(size=8))
+
+print(plot2)
+
+```
+
