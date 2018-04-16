@@ -1,0 +1,13 @@
+name: Coffeetally
+title: Coffeetally
+username:
+account: christianvangaalen
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 248335
+bundleId: 1202504
+url: https://christianvangaalen.shinyapps.io/Coffeetally/
+when: 1517473456.50715
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: Coffeetally Dev.R|Coffeetally.R|ggmap examples.R
