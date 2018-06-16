@@ -47,6 +47,8 @@ ui <- fluidPage(
             ),
     tabPanel("Time", plotOutput('plot2')
     ),
+    tabPanel("About"
+    ),
     tabPanel("Development", 
              p("App Icon -> html schrijven voor apple-touch-icon"),
              p("slider input voor Time grafiek"),
